@@ -21,10 +21,11 @@ try:
             print("Too low!")
         elif guess > numberToGuess:
             print("Too high!")
+        elif attempts >= chances and guess != numberToGuess:
+            print(f"Sorry, you've used all your chances. The correct number was {numberToGuess}.")
         else:
-            print(f"Congratulations! You've guessed the correct number {numberToGuess} in {attempts} attempts.")
+            print(f"Congratulations! You've guessed the correct number in {attempts} attempts.")
             break
-    print(f"Sorry, you've used all your chances. The correct number was {numberToGuess}. Better luck next time!")
 
 except:
     print("Invalid input.")
