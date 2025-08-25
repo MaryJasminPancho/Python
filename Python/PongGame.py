@@ -72,71 +72,111 @@ def rightpaddle_down():
     y-=50
     rightpaddle.sety(y)
 
-#keyboard binding
-window.listen()
-window.onkeypress(leftpaddle_up, "w")   
-window.onkeypress(leftpaddle_down, "s")
-window.onkeypress(rightpaddle_up, "Up")
-window.onkeypress(rightpaddle_down, "Down") 
+#play game function
+def play_game():
+    #resert ball and paddles
+    leftpaddle.goto(-350, 0)
+    rightpaddle.goto(350, 0)
+    ball.goto(0, 0)
+    ball.dx = 0.4
+    ball.dy = -0.4
+    #reset score
+    global score_a, score_b
+    score_a = 0
+    score_b = 0
 
-#Main game loop
-while True:
-    window.update()
-    
-    #Move the ball
-    ball.setx(ball.xcor() + ball.dx)
-    ball.sety(ball.ycor() + ball.dy)
+    pen.clear()
+    pen.write("Player A: 0   Player B: 0", align="center", font=("Courier", 24, "normal"))
 
-    #Border setup
-    #bottom and up
-    if ball.ycor() > 290:
-        ball.sety(290)
-        ball.dy *= -1
+    #keyboard binding
+    window.listen()
+    window.onkeypress(leftpaddle_up, "w")   
+    window.onkeypress(leftpaddle_down, "s")
+    window.onkeypress(rightpaddle_up, "Up")
+    window.onkeypress(rightpaddle_down, "Down") 
 
-    if ball.ycor() < -290:
-        ball.sety(-290)
-        ball.dy *= -1
-
-    #left and right
-    if ball.xcor() > 390:
-        ball.goto(0,0)
-        ball.dx *= -1
-        score_a += 1
-        pen.clear()
-        pen.write("Player A: {}   Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
-    
-    if ball.xcor() < -390:
-        ball.goto(0, 0)
-        ball.dx *= -1
-        score_b += 1
-        pen.clear()
-        pen.write("Player A: {}   Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
+    #Main game loop
+    while True:
+        window.update()
         
+        #Move the ball
+        ball.setx(ball.xcor() + ball.dx)
+        ball.sety(ball.ycor() + ball.dy)
 
-    #Collision with the paddles and ball
-    if (ball.xcor() > 340) and (ball.xcor() < 350) and (ball.ycor() < rightpaddle.ycor() + 40 and ball.ycor() > rightpaddle.ycor() - 40):
-        ball.setx(340)
-        ball.dx *= -1
+        #Border setup
+        #bottom and up
+        if ball.ycor() > 290:
+            ball.sety(290)
+            ball.dy *= -1
 
-    if (ball.xcor() < -340) and (ball.xcor() > -350) and (ball.ycor() < leftpaddle.ycor() + 40 and ball.ycor() > leftpaddle.ycor() - 40):
-        ball.setx(-340)
-        ball.dx *= -1
+        if ball.ycor() < -290:
+            ball.sety(-290)
+            ball.dy *= -1
 
-    #game over
-    if score_a == 5:
-        pen.clear()
-        ball.dx = 0
-        ball.dy = 0
-        leftpaddle.goto(-350, 0)
-        rightpaddle.goto(350, 0)
-        pen.write("Player A wins!", align="center", font=("Courier", 32, "normal"))
+        #left and right
+        if ball.xcor() > 390:
+            ball.goto(0,0)
+            ball.dx *= -1
+            score_a += 1
+            pen.clear()
+            pen.write("Player A: {}   Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
+        
+        if ball.xcor() < -390:
+            ball.goto(0, 0)
+            ball.dx *= -1
+            score_b += 1
+            pen.clear()
+            pen.write("Player A: {}   Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
+            
 
-    if score_b == 5:
-        pen.clear()
-        ball.dx = 0
-        ball.dy = 0
-        leftpaddle.goto(-350, 0)
-        rightpaddle.goto(350, 0)
-        pen.write("Player B wins!", align="center", font=("Courier", 32, "normal"))
+        #Collision with the paddles and ball
+        if (ball.xcor() > 340) and (ball.xcor() < 350) and (ball.ycor() < rightpaddle.ycor() + 40 and ball.ycor() > rightpaddle.ycor() - 40):
+            ball.setx(340)
+            ball.dx *= -1
 
-    
+        if (ball.xcor() < -340) and (ball.xcor() > -350) and (ball.ycor() < leftpaddle.ycor() + 40 and ball.ycor() > leftpaddle.ycor() - 40):
+            ball.setx(-340)
+            ball.dx *= -1
+
+        #game over
+        if score_a == 2:
+            pen.clear()
+            '''ball.dx = 0
+            ball.dy = 0
+            leftpaddle.goto(-350, 0)
+            rightpaddle.goto(350, 0)'''
+            end_game("Player A wins!")
+            break
+
+        if score_b == 2:
+            pen.clear()
+            '''ball.dx = 0
+            ball.dy = 0
+            leftpaddle.goto(-350, 0)
+            rightpaddle.goto(350, 0)'''
+            end_game("Player B wins!")
+            break
+
+#retry function
+def end_game(message=None):
+    ball.dx = 0
+    ball.dy = 0
+    leftpaddle.goto(-350, 0)
+    rightpaddle.goto(350, 0)
+
+    pen.clear()
+    if message:
+        pen.write(message + "\nPress 'r' to play again or 'q' to quit",
+                  align="center", font=("Courier", 24, "normal"))
+    else:
+        pen.write("Thanks for playing!",
+                  align="center", font=("Courier", 24, "normal"))
+        window.bye()  # closes window
+
+    window.listen()
+    window.onkeypress(play_game, "r")
+    window.onkeypress(lambda: end_game(None), "q") 
+
+#start the game
+play_game()
+window.mainloop()
