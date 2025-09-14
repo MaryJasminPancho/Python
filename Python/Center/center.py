@@ -177,7 +177,7 @@ def main()->None:
             case "4": updatestudent()
             case "5": displayall()
             case "0": print(" "*25 + "Program Ended")
-            case   _: print("Invalid Option".center(120))
+            case   _: print("Invalid Option".center(73))
         print(" "*25,end="")
         print(end="")
         input(" "*25 + "\npress any key to continue...")
