@@ -47,8 +47,10 @@ class StudentList:
     def showlist(self)->list:
         if not self.isempty():
             for student in self.slist:
+                print(" "*25, end="")
                 print(f"{student.getidno()} {student.getlastname()} {student.getfirstname()} {student.getcourse()} {student.getlevel()}")
         else:
+            print(" "*25, end="")
             print("No students available.")
 
 
